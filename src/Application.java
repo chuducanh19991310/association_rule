@@ -17,6 +17,9 @@ public class Application {
         System.out.println(itemSet.size());
         for (ArrayList<String> item: itemSet.keySet()) {
             for (String one: item) {
+                if (item.get(item.size()-1).equals(one)) {
+                    System.out.print(one);
+                } else
                 System.out.print(one + ", ");
             }
             System.out.println(": " + itemSet.get(item));
