@@ -3,22 +3,7 @@ from mlxtend.preprocessing import TransactionEncoder
 import pandas as pd
 from csv import reader
 from itertools import chain, combinations
-
-
-def powerset(s):
-    return chain.from_iterable(combinations(s, r) for r in range(1, len(s)))
-
-
-def associationRule(freqItemSet, itemSetList, minConf):
-    rules = []
-    for itemSet in freqItemSet:
-        subsets = powerset(itemSet)
-        itemSetSup = getSupport(itemSet, itemSetList)
-        for s in subsets:
-            confidence = float(itemSetSup / getSupport(s, itemSetList))
-            if(confidence > minConf):
-                rules.append([set(s), set(itemSet.difference(s)), confidence])
-    return rules
+import time
 
 
 def extractDataFromCSVFile(filepath):
@@ -45,44 +30,54 @@ def extractDataFromTxtFile(filepath):
 
 def fpGrowth():
     dataset = extractDataFromTxtFile('data1.txt')
+    # dataset = extractDataFromCSVFile('./DataSetA.csv')
     te = TransactionEncoder()
     te_ary = te.fit(dataset).transform(dataset)
     df = pd.DataFrame(te_ary, columns=te.columns_)
-    data = fpgrowth(df, min_support=0.01, use_colnames=True)
+    data = fpgrowth(df, min_support=0.02, use_colnames=True)
+    for idx, row in data.iterrows():
+        data.at[idx, "support"] = round(row["support"]*len(dataset))
     return data
+
+
+def outputItemList(filepath, data):
+    dataset = extractDataFromTxtFile('data1.txt')
+    # dataset = extractDataFromCSVFile('./DataSetA.csv')
+    total = len(dataset)
+    modifiedData = data.to_numpy().tolist()
+    print(modifiedData)
+    with open(filepath, 'w') as f:
+        for item in modifiedData:
+            itemList = ', '.join(sorted(list(item[1])))
+            numberOfOccurrences = round(item[0])
+            f.write("{}: {}\n".format(
+                itemList, numberOfOccurrences))
+
+
+def outputRule(filepath, data):
+    # thang data nay dang chua so thuc nen bi sai so
+    # day nhe, bay gio toi dung o
+    print(data)
+    assoc_rules = association_rules(
+        data, metric="confidence", min_threshold=0.1).to_numpy().tolist()
+    with open(filepath, 'w') as f:
+        for item in assoc_rules:
+            antecedentList = ', '.join(sorted(list(item[0])))
+            consequentsList = ', '.join(sorted(list(item[1])))
+            f.write("{} -> {}\n".format(
+                antecedentList, consequentsList))
 
 
 def outputTofFile():
     data = fpGrowth()
     outputItemList('output_item_list_lib.txt', data)
-    outputRule('output_rule.txt', data)
-
-
-def outputItemList(filepath, data):
-    dataset = extractDataFromTxtFile('data1.txt')
-    total = len(dataset)
-    modifiedData = data.to_numpy().tolist()
-    with open(filepath, 'w') as f:
-        for item in modifiedData:
-            itemList = ','.join(sorted(list(item[1])))
-            numberOfOccurrences = round(item[0] * total)
-            f.write("{} : {}\n".format(
-                itemList, numberOfOccurrences))
-
-
-def outputRule(filepath, data):
-    assoc_rules = association_rules(
-        data, support_only=True, min_threshold=0.01).to_numpy().tolist()
-    with open(filepath, 'w') as f:
-        for item in assoc_rules:
-            antecedentList = ','.join(sorted(list(item[0])))
-            consequentsList = ','.join(sorted(list(item[1])))
-            f.write("{} -> {}\n".format(
-                antecedentList, consequentsList))
+    outputRule('output_rule_lib.txt', data)
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     outputTofFile()
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 
 #     # Read data from file
