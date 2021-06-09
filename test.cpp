@@ -28,19 +28,20 @@ int main(){
     
     // Test frequentItemSet
     vector<string> itemSetLib = readfile("output_item_list_lib.txt");
-    vector<string> itemSet = readfile("output_item_list_manual.txt");
+    vector<string> itemSet = readfile("output_item_list.txt");
     if(itemSet == itemSetLib){
-        cout<<"Correct frequentItemSet!";
+        cout<<"Correct frequentItemSet!\n";
     } else {
-        cout<<"Incorrect frequentItemSet!";
+        
+        cout<<"Incorrect frequentItemSet!\n";
     }
     
     // Test rule
     vector<string> assocRuleLib = readfile("output_rule_lib.txt");
-    vector<string> assocRule = readfile("output_rule_manual.txt");
+    vector<string> assocRule = readfile("output_rule.txt");
     if(assocRuleLib == assocRule){
-        cout<<"Correct frequentItemSet!";
+        cout<<"Correct rule!\n";
     } else {
-        cout<<"Incorrect frequentItemSet!";
+        cout<<"Incorrect rule!\n";
     }
 }
