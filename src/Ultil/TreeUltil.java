@@ -9,37 +9,30 @@ import java.util.Objects;
 public class TreeUltil {
 
     public static boolean isSinglePath(FPTree fpTree) {
-        boolean isSinglePath = true;
-        if(fpTree.children.size() > 1){
-            isSinglePath = false;
-            return isSinglePath;
-        }else{
-            for(FPTree child: fpTree.children){
-                if(isSinglePath){
-                    isSinglePath = isSinglePath(child);
-                }else{
-                    break;
-                }
-            }
+        if (fpTree.getChildren().size() > 1) {
+            return false;
         }
-        return isSinglePath;
+        if (fpTree.getChildren().size() == 0) {
+            return  true;
+        }
+        return isSinglePath(fpTree.getChildren().get(0));
     }
 
     public static FPTree buildTree(
             ArrayList<ArrayList<String>> transactions,
-            ArrayList<CandidateItem> headerTable
+            ArrayList<CandidateItem> candidateTable
     ) {
         FPTree fpTree = new FPTree();
         fpTree.root = true;
         for (ArrayList<String> transaction: transactions) {
             ArrayList<String> filterTransaction = new ArrayList<>();
-            // Đã được sắp xếp vì for theo headerNode
-            for (CandidateItem h: headerTable) {
+            // Đã được sắp xếp vì for theo candidateTable
+            for (CandidateItem h: candidateTable) {
                 if (transaction.contains(h.item)) {
                     filterTransaction.add(h.item);
                 }
             }
-            TreeUltil.addToTree(filterTransaction, headerTable, fpTree, 0);
+            TreeUltil.addToTree(filterTransaction, candidateTable, fpTree, 0);
         }
         return fpTree;
     }

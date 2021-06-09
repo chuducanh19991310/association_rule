@@ -8,7 +8,7 @@ import java.util.Hashtable;
 public class Application {
     public static void main(String[] args) {
         FPGrowth fpGrowth =
-                new FPGrowth("/home/chuducanh/Downloads/T10I4D100K.txt", 0.01);
+                new FPGrowth("/home/chuducanh/Downloads/adult2.txt", 0.6);
         Long startTime = System.currentTimeMillis();
         fpGrowth.execute();
         Hashtable<ArrayList<String>, Integer>
