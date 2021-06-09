@@ -39,7 +39,8 @@ public class FPGrowth {
             while (scanner.hasNextLine()) {
                 ArrayList<String> transaction = new ArrayList<>();
                 String line = scanner.nextLine();
-                StringTokenizer rawItemToken = new StringTokenizer(line, ", ");
+//                StringTokenizer rawItemToken = new StringTokenizer(line, ",");
+                StringTokenizer rawItemToken = new StringTokenizer(line, " ");
                 while (rawItemToken.hasMoreTokens()) {
                     String item = rawItemToken.nextToken();
                     transaction.add(item);
