@@ -40,7 +40,7 @@ public class FPGrowth {
                 ArrayList<String> transaction = new ArrayList<>();
                 String line = scanner.nextLine();
 //                StringTokenizer rawItemToken = new StringTokenizer(line, ",");
-                StringTokenizer rawItemToken = new StringTokenizer(line, " ");
+                StringTokenizer rawItemToken = new StringTokenizer(line, ",");
                 while (rawItemToken.hasMoreTokens()) {
                     String item = rawItemToken.nextToken();
                     transaction.add(item);
@@ -155,7 +155,7 @@ public class FPGrowth {
         ArrayList<ArrayList<String>> newTransactions
      ) {
          Hashtable<String, Integer> itemCountsInternal = new Hashtable<>();
-         ArrayList<CandidateItem> headerTable = new ArrayList<>();
+         ArrayList<CandidateItem> candidateItemList = new ArrayList<>();
          for (ArrayList<String> transaction: newTransactions) {
              for (String item: transaction) {
                  addToItemCount(itemCountsInternal, item);
@@ -167,12 +167,12 @@ public class FPGrowth {
                         item,
                         itemCountsInternal.get(item)
                 );
-                headerTable.add(node);
+                 candidateItemList.add(node);
              }
          }
-         Collections.sort(headerTable,
+         Collections.sort(candidateItemList,
                  new CandidateItemComparator());
-         return headerTable;
+         return candidateItemList;
      }
 
 

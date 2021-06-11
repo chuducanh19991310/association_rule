@@ -23,27 +23,26 @@ def extractDataFromTxtFile(filepath):
         lines = [line.rstrip('\n') for line in file]
         for line in lines:
             row = [string for string in line.split(
-                ' ') if string != '']
+                ',') if string != '']
             dataset.append(row)
     return dataset
 
 
-def fpGrowth():
-    dataset = extractDataFromTxtFile('data1.txt')
+
+
+def fpGrowth(data_file, min_sup):
+    dataset = extractDataFromTxtFile(data_file)
     # dataset = extractDataFromCSVFile('./DataSetA.csv')
     te = TransactionEncoder()
     te_ary = te.fit(dataset).transform(dataset)
     df = pd.DataFrame(te_ary, columns=te.columns_)
-    data = fpgrowth(df, min_support=0.02, use_colnames=True)
+    data = fpgrowth(df, min_support=min_sup, use_colnames=True)
     for idx, row in data.iterrows():
         data.at[idx, "support"] = round(row["support"]*len(dataset))
     return data
 
 
 def outputItemList(filepath, data):
-    dataset = extractDataFromTxtFile('data1.txt')
-    # dataset = extractDataFromCSVFile('./DataSetA.csv')
-    total = len(dataset)
     modifiedData = data.to_numpy().tolist()
     print(modifiedData)
     with open(filepath, 'w') as f:
@@ -54,12 +53,12 @@ def outputItemList(filepath, data):
                 itemList, numberOfOccurrences))
 
 
-def outputRule(filepath, data):
+def outputRule(filepath, data, min_conf):
     # thang data nay dang chua so thuc nen bi sai so
     # day nhe, bay gio toi dung o
     print(data)
     assoc_rules = association_rules(
-        data, metric="confidence", min_threshold=0.1).to_numpy().tolist()
+        data, metric="confidence", min_threshold=min_conf).to_numpy().tolist()
     with open(filepath, 'w') as f:
         for item in assoc_rules:
             antecedentList = ', '.join(sorted(list(item[0])))
@@ -69,9 +68,12 @@ def outputRule(filepath, data):
 
 
 def outputTofFile():
-    data = fpGrowth()
+    data_file = "/home/chuducanh/association_rule/DataSetA.txt";
+    min_sup = 0.02
+    min_conf = 0.01
+    data = fpGrowth(data_file, min_sup)
     outputItemList('output_item_list_lib.txt', data)
-    outputRule('output_rule_lib.txt', data)
+    outputRule('output_rule_lib.txt', data, min_conf)
 
 
 if __name__ == "__main__":
